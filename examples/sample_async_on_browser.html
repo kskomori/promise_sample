@@ -1,0 +1,55 @@
+<!html5>
+
+<html>
+<head>
+</head>
+
+<body>
+  abc
+
+  <script>
+  const waitFunc = (msg) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(console.log(msg));
+      }, 1000);
+    });
+  };
+
+  const main3 = async () => {
+    try {
+        console.log("main1");
+        // この書き方だと、ここで待ってしまうので、2つ目のwaitFunc() まで同期処理になってしまう
+        const g = await waitFunc('https://www.google.co.jp');
+        console.log("main2");
+        const y = await waitFunc('https://yahoo.co.jp');
+        console.log("main3");
+    } catch(e) {
+        console.log(e);
+    }    
+  };
+
+  const main1 = async () => {
+    try {
+        console.log("main1");
+        const g = waitFunc('https://www.google.co.jp');
+        console.log("main2");
+        const y = waitFunc('https://yahoo.co.jp');
+        // この書き方だと、waitFunc() はそれぞれ非同期に、これ以降で同期処理をする
+        await g;
+        await y;
+        console.log("main3");
+    } catch(e) {
+        console.log(e);
+    }    
+  };
+
+
+  main1();
+
+  </script>
+
+<body>
+
+</html>
+
